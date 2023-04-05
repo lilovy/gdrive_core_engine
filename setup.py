@@ -6,7 +6,7 @@ with open('requirements.txt') as f:
 
 setup(
     name='gdrive_engine',
-    version='0.0.2',
+    version='0.0.3',
     packages=find_packages(),
     install_requires=install_requires,
     author='Lilovy',
@@ -15,7 +15,7 @@ setup(
     license='MIT',
     url='https://github.com/lilovy/gdrive_core_engine',
     classifiers=[
-        'Development Status :: 2 - Alpha',
+        'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3',
