@@ -252,7 +252,7 @@ class GDrive(object):
         query = "mimeType='application/vnd.google-apps.folder' and trashed=false"
         if parents_id:
             query += f" and parents in '{parents_id}'"
-        fields = "nextPageToken, files(id, name)"
+        fields = "nextPageToken, files(name, id, parents)"
 
         try:
             result = self.service.files().list(
