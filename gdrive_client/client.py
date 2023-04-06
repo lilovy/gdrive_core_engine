@@ -63,17 +63,18 @@ class GDrive(object):
         """
 
         query = f"name='{folder_name}'" \
-                " and mimeType='application/vnd.google-apps.folder'"
+                " and mimeType='application/vnd.google-apps.folder'" \
+                " and trashed=false"
         # " and trashed=false and parents='{parent_folder_id}'"
         if parent_folder_id:
-            query += f" and trashed=false and parents='{parent_folder_id}'"
+            query += f" and parents='{parent_folder_id}'"
 
         fields = "files(id)"
 
         try:
             folder = self.service.files().list(
                 q=query,
-                fields=fields
+                fields=fields,
             ).execute().get('files', [])
 
             if folder:
@@ -242,6 +243,30 @@ class GDrive(object):
 
         except HttpError as e:
             print(e)
+        
+    def get_folders(
+        self,
+        parents_id: str = None,
+        ):
+        
+        query = "mimeType='application/vnd.google-apps.folder' and trashed=false"
+        if parents_id:
+            query += f" and parents in '{parents_id}'"
+        fields = "nextPageToken, files(id, name)"
+
+        try:
+            result = self.service.files().list(
+                q=query,
+                fields=fields,
+            ).execute()
+
+            items = result.get('files', [])
+            if items:
+                return items
+            return
+
+        except HttpError as e:
+            print(e)
 
     def folder_files(
             self,
@@ -266,6 +291,7 @@ class GDrive(object):
 if __name__ == "__main__":
     drive = GDrive(client_secret_file, api_name, api_version, scopes)
     print(dir(drive()))
+    print(drive.get_folders())
     # drive.create_folder('something else', '1FWcjww09qOHAjFb86PSFf3IZJB129ep7')
     # print(drive.folder_files('11fgw2lZeNGECHftVID8kx48S6c6RSr-Y'))
     # print(drive.get_file('1-56fCVb-CIrVaEOGB-XNwiDrOm_q_Qf8', 'hogwarts'))
